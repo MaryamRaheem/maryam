@@ -18,27 +18,65 @@ const initialState = {
   users: [], 
   chatList: [],  
   participantId: null,
+  allUsers: [], 
+  conversation_id: null,
+  content:null,
 };
 
-// export const GetAllChats = createAsyncThunk(
-//   'auth/GetAllChats',
-//   async ({ token}, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post(
-//         'http://localhost:4000/api/conversations', 
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`
-//           }
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
 
+
+
+export const SendMessage = createAsyncThunk(
+  'auth/SendMessage',
+  async ({ token,conversation_id, message }, { rejectWithValue }) => {
+    try {
+      // alert(localStorage.getItem("token"))
+      const response = await axios.post(
+        'http://localhost:4000/api/messages', 
+        {
+          token: token,
+          conversationId: conversation_id,
+          content: message // Sending the message as content
+        }, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+      console.log("hello1");
+      return response.data; // Return the API response data
+    } catch (error) {
+      console.log(error);
+      console.log("hello2");
+      // Handle the error and return the rejection value
+      return rejectWithValue(error.response.data || 'Error sending message');
+    }
+  }
+);
+
+ 
+
+
+export const SendReceiverId = createAsyncThunk(
+  'auth/SendReceiverId',
+  async ({ token, participantId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:4000/api/conversations', 
+        { participantId }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const GetAllChats = createAsyncThunk(
   'auth/GetAllChats',
   async ({ token }, { rejectWithValue }) => {
@@ -61,21 +99,21 @@ export const GetAllChats = createAsyncThunk(
   }
 );
 
-export const SendReceiverId = createAsyncThunk(
-  'auth/SendReceiverId',
-  async ({ token, participantId }, { rejectWithValue }) => {
+export const ReceiveMessages = createAsyncThunk(
+  'auth/ReceiveMessages',
+  async ({token,conversation_id}, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        'http://localhost:4000/api/conversations', 
-        { participantId }, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      return response.data;
+      // Send the API request with conversationId as a parameter
+      const response = await axios.get(`http://localhost:4000/api/messages/${conversation_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token if needed for authentication
+        },
+      });
+      console.log('Messages:', response.data); // Handle the response (store in Redux, update UI, etc.)
+      return response.da
+      
     } catch (error) {
+      console.error('Error fetching messages:', error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -92,6 +130,25 @@ export const GetUsers = createAsyncThunk(
     }
   }
 );
+
+
+
+// export const SendMessage = createAsyncThunk(
+//   'auth/SendMessage',
+//   async ({conversation_id}, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post('http://localhost:4000/api/messages', {
+//         conversation_id: conversation_id,
+//         content: message,
+//       });
+
+//       console.log('Message sent:', response.data);
+//     } catch (error) {
+//       console.error('Error sending message:', error);
+//     }
+//   }
+// );
+
 
 export const passwordcheck = createAsyncThunk(
   'auth/passwordcheck',
@@ -168,6 +225,12 @@ const authSlice = createSlice({
       state.participantId = action.payload;
       console.log("The participant id is" + state.participantId)
     },
+    setConversationId(state, action) {
+      state.conversation_id = action.payload;
+      console.log(state.conversation_id);
+      localStorage.setItem('conversation_id', state.conversation_id);
+
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -242,9 +305,8 @@ const authSlice = createSlice({
       })
       .addCase(GetAllChats.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.chatList = action.payload; 
-         console.log("Storing chats in localStorage:", action.payload);
-        // localStorage.setItem('AllChats', JSON.stringify(action.payload));
+        state.allUsers = action.payload; 
+         localStorage.setItem('AllUsers', JSON.stringify(action.payload));
       })
       .addCase(GetAllChats.rejected, (state, action) => {
         state.status = 'failed';
@@ -254,6 +316,6 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout, save_info, setStep, setPhoneNumber, addToChatList, SetparticipantId } = authSlice.actions;
+export const { logout, save_info, setStep, setPhoneNumber, addToChatList, SetparticipantId, setConversationId } = authSlice.actions;
 
 export default authSlice.reducer;

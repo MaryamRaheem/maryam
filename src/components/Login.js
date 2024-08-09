@@ -97,13 +97,14 @@ const Login = () => {
         <Typography variant="subtitle1" sx={{ mb: 2, fontFamily: 'poppins', fontSize: '1.6rem', fontWeight: 'medium' }}>
           Enter Your Phone Number and Password
         </Typography>
+        <Box width={'100%'} sx={{ml:9}} >
         <PhoneInput
           country={'pk'}
           value={phone_number}
           onChange={handlePhoneChange}
-          inputStyle={{ width: '100%' }}
+          inputStyle={{ width: '84%' }}
         />
-      
+      </Box>
         <Button
           variant="contained"
           sx={{

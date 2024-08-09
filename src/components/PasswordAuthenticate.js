@@ -105,7 +105,7 @@ const PasswordAuthenticate = () => {
                 />
               </FormControl>
             </Box>
-            <Button variant="contained" sx={{ mt: 2, backgroundColor: '#1F487C', borderRadius: '50px', width: '327px', height: '52px', '&:hover': { backgroundColor: '#1F487C' } }} onClick={handleContinue}>Login</Button>
+            <Button variant="contained" sx={{ mt: 2, backgroundColor: '#1F487C', borderRadius: '50px', width: '200px', height: '40px', '&:hover': { backgroundColor: '#1F487C' } }} onClick={handleContinue}>Login</Button>
           </Box>
         </Box>
       </Box>

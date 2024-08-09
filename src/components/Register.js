@@ -63,7 +63,7 @@ const Register = () => {
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        height: '100vh',
+       
       }}
     >
       <Box
@@ -117,9 +117,9 @@ const Register = () => {
           sx={{
             mt: 2,
             backgroundColor: '#1F487C',
-            width: '14%',
+            width: '19%',
             borderRadius: '50px',
-            height: '7%',
+            height: '9%',
             '&:hover': {
               backgroundColor: '#1F487C',
             },

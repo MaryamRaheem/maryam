@@ -9,13 +9,15 @@ import PasswordAuthenticate from './components/PasswordAuthenticate';
 import PersonalChat from './components/PersonalChat';
 import UserProfile from './components/UserProfile';
 import ContactsPage from './components/ContactsPage';
+import HomePage from './components/HomePage';
 
 function App() {
   return (
     <div>
     <Router>
     <Routes>
-      <Route path="/" element={<Register/>} />
+    <Route path="/" element={<HomePage/>} />
+      <Route path="/register" element={<Register/>} />
       <Route path="/profile" element={<Profile/>} />
     <Route path="/RoleSelect" element={<RoleSelect/>} />
     <Route path="/Login" element={<Login/>} />

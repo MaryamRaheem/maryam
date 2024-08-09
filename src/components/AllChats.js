@@ -18,15 +18,18 @@ import UserProfile from './UserProfile';
 import ContactsPage from './ContactsPage';
 import { useState,useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetAllChats } from '../features/auth/authSlice';
+import { GetAllChats,setConversationId,ReceiveMessages } from '../features/auth/authSlice';
+
 
 const AllChats = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const chatList = useSelector((state) => state.auth.chatList);
+  const allUsers = useSelector((state) => state.auth.allUsers);
   const users = useSelector((state) => state.auth.users);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
+  const conversation_id = useSelector((state) => state.auth.error);
+
   const [showClearIcon, setShowClearIcon] = useState("none");
   const [searchQuery, setSearchQuery] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -45,8 +48,8 @@ const AllChats = () => {
   }, [dispatch, token]);
   
   useEffect(() => {
-    console.log("Chat List:", chatList);
-  }, [chatList]);
+    console.log("all Users:", allUsers);
+  }, [allUsers]);
   
   // useEffect(() => {
   //   // const storedChats = localStorage.getItem('AllChats');
@@ -64,9 +67,37 @@ const AllChats = () => {
     setShowClearIcon("none");
   };
 
-  const handleChatClick = (name) => {
-    navigate(`/personal-chat/${name}`);
-  };
+//   const handleChatClick = (user) => {
+//     const conversationId = user._id;
+//     dispatch(setConversationId(conversationId));
+//  console.log("the receive1");
+//   // Dispatch the ReceiveMessages thunk with both token and conversationId
+//   dispatch(ReceiveMessages);
+//   console.log("the receive2");
+//   // // Navigate to the personal chat page
+//   // navigate(`/personal-chat/${user.participants[0]?.name}`);
+//   navigate(`/personal-chat/${user.participants[0]?.name}`, { 
+//     state: { lastMessage: user.lastMessage } 
+//   });
+  
+//   };
+const handleChatClick = (user) => {
+  const conversationId = user._id;
+  dispatch(setConversationId(conversationId));
+  
+  console.log("Setting conversation ID:", conversationId);
+  
+  // Dispatch the ReceiveMessages thunk with both token and conversationId
+  dispatch(ReceiveMessages({ token, conversationId }));
+  
+  console.log("Dispatched ReceiveMessages for conversation ID:", conversationId);
+  
+  // Navigate to the personal chat page
+  navigate(`/personal-chat/${user.participants[0]?.name}`, { 
+    state: { lastMessage: user.lastMessage } 
+  });
+};
+
  
   
   const handleUser = () => {
@@ -85,11 +116,14 @@ const AllChats = () => {
     setIsContactsOpen(false);
   };
 
-    const filteredNames = users.filter(name =>
-    users.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  //   const filteredNames = users.filter(name =>
+  //   users.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
-  // const localChats = JSON.parse(localStorage.getItem('AllChats'))
+  const filteredNames = users.filter(user =>
+    user.name && user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const localChats = JSON.parse(localStorage.getItem('AllChats'))
 
   return (
     <Container
@@ -162,7 +196,7 @@ const AllChats = () => {
 
         {/* Chat List */}
         <Box sx={{ overflowY: 'auto' }}>
-          {filteredNames.map((user, index) => (
+          {allUsers.map((user, index) => (
             <Box
               key={user._id}
               sx={{
@@ -175,16 +209,20 @@ const AllChats = () => {
                   backgroundColor: '#f9f9f9',
                 },
               }}
-              onClick={() => handleChatClick(user[index]?.participants[0]?.name)}
+              onClick={() => handleChatClick(user)}
             >
               <Avatar src={user.profile_url} />
-              <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="subtitle1">{user[index]?.participants[0]?.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                   {user[index]?.participants[0]?.lastMessage}
-                
-                </Typography>
-              </Box>
+             
+<Box sx={{ marginLeft: 2 }}>
+  <Typography variant="subtitle1">{user.participants[0]?.name}</Typography>
+  <Typography variant="body2" color="textSecondary">
+    {user.lastMessage?.message || "No message yet"}
+  </Typography>
+  <Typography variant="body2" color="textSecondary">
+    {new Date(user.lastMessage?.timestamp).toLocaleString() || "No timestamp"}
+  </Typography>
+</Box>
+
               <Typography variant="body2" color="textSecondary" sx={{ marginLeft: 'auto' }}>
                 Today
               </Typography>
@@ -232,6 +270,7 @@ const AllChats = () => {
       >
         <ContactsPage />
       </Drawer>
+      
     </Container>
   );
 };
