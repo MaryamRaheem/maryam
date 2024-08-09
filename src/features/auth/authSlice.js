@@ -21,8 +21,54 @@ const initialState = {
   allUsers: [], 
   conversation_id: null,
   content:null,
+  user_id:null
 };
 
+
+;
+export const ReceiveMessages = createAsyncThunk(
+  'auth/ReceiveMessages',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const conversation_id = localStorage.getItem("conversation_id");
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(`http://localhost:4000/api/messages/${conversation_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });   
+
+      return response.data; // This should include an array of messages with a sender property
+    } catch (error) {
+      console.error('Error fetching messages:', error.response ? error.response.data : error.message);
+      return rejectWithValue(error.response ? error.response.data : 'Error fetching messages');
+    }
+  }
+);
+
+// export const ReceiveMessages = createAsyncThunk(
+//   'auth/ReceiveMessages',
+//   async (_, { getState, rejectWithValue }) => {
+//     try {
+    
+//       const conversation_id = localStorage.getItem("conversation_id");
+//       const token = localStorage.getItem("token");
+     
+
+//       const response = await axios.get(`http://localhost:4000/api/messages/${conversation_id}`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`, 
+//         },
+//       });   
+//       return response.data;
+      
+//     } catch (error) {
+//       console.error('Error fetching messages:', error.response ? error.response.data : error.message);
+//       return rejectWithValue(error.response ? error.response.data : 'Error fetching messages');
+//     }
+//   }
+// );
 
 
 
@@ -99,25 +145,7 @@ export const GetAllChats = createAsyncThunk(
   }
 );
 
-export const ReceiveMessages = createAsyncThunk(
-  'auth/ReceiveMessages',
-  async ({token,conversation_id}, { rejectWithValue }) => {
-    try {
-      // Send the API request with conversationId as a parameter
-      const response = await axios.get(`http://localhost:4000/api/messages/${conversation_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token if needed for authentication
-        },
-      });
-      console.log('Messages:', response.data); // Handle the response (store in Redux, update UI, etc.)
-      return response.da
-      
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+
 
 export const GetUsers = createAsyncThunk(
   'auth/GetUsers',
@@ -133,21 +161,6 @@ export const GetUsers = createAsyncThunk(
 
 
 
-// export const SendMessage = createAsyncThunk(
-//   'auth/SendMessage',
-//   async ({conversation_id}, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post('http://localhost:4000/api/messages', {
-//         conversation_id: conversation_id,
-//         content: message,
-//       });
-
-//       console.log('Message sent:', response.data);
-//     } catch (error) {
-//       console.error('Error sending message:', error);
-//     }
-//   }
-// );
 
 
 export const passwordcheck = createAsyncThunk(
@@ -231,6 +244,10 @@ const authSlice = createSlice({
       localStorage.setItem('conversation_id', state.conversation_id);
 
     },
+    SetUserId(state, action) {
+      state.user_id = action.payload;
+      // console.log("The participant id is" + state.participantId)
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -273,9 +290,12 @@ const authSlice = createSlice({
       .addCase(passwordcheck.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.token = action.payload.token;
+        state.user_id= action.payload.user._id;
         state.registrationMessage = action.payload.message;
         localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('user_id',action.payload.user._id);
         console.log("Token stored in state:", state.token);
+        console.log("User_id stored in state:", state.user_id);
       })
       .addCase(passwordcheck.rejected, (state, action) => {
         state.status = 'failed';
@@ -316,6 +336,6 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout, save_info, setStep, setPhoneNumber, addToChatList, SetparticipantId, setConversationId } = authSlice.actions;
+export const { logout, save_info, setStep, setPhoneNumber, addToChatList, SetparticipantId, setConversationId, SetUserId } = authSlice.actions;
 
 export default authSlice.reducer;

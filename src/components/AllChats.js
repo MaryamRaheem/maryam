@@ -51,10 +51,6 @@ const AllChats = () => {
     console.log("all Users:", allUsers);
   }, [allUsers]);
   
-  // useEffect(() => {
-  //   // const storedChats = localStorage.getItem('AllChats');
-  //   // console.log('Chats in localStorage:', storedChats);
-  // }, []);
 
 
   const handleChange = (event) => {
@@ -67,20 +63,9 @@ const AllChats = () => {
     setShowClearIcon("none");
   };
 
-//   const handleChatClick = (user) => {
-//     const conversationId = user._id;
-//     dispatch(setConversationId(conversationId));
-//  console.log("the receive1");
-//   // Dispatch the ReceiveMessages thunk with both token and conversationId
-//   dispatch(ReceiveMessages);
-//   console.log("the receive2");
-//   // // Navigate to the personal chat page
-//   // navigate(`/personal-chat/${user.participants[0]?.name}`);
-//   navigate(`/personal-chat/${user.participants[0]?.name}`, { 
-//     state: { lastMessage: user.lastMessage } 
-//   });
+
   
-//   };
+
 const handleChatClick = (user) => {
   const conversationId = user._id;
   dispatch(setConversationId(conversationId));
@@ -98,7 +83,8 @@ const handleChatClick = (user) => {
   });
 };
 
- 
+
+
   
   const handleUser = () => {
     setIsProfileOpen(true);
@@ -116,9 +102,7 @@ const handleChatClick = (user) => {
     setIsContactsOpen(false);
   };
 
-  //   const filteredNames = users.filter(name =>
-  //   users.name.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+
 
   const filteredNames = users.filter(user =>
     user.name && user.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -270,9 +254,23 @@ const handleChatClick = (user) => {
       >
         <ContactsPage />
       </Drawer>
+
+
+      {/* <Drawer
+        anchor="left"
+        open={isPersonalChat}
+        onClose={handlePersonalClose}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{ width: '27%', '& .MuiDrawer-paper': { width: '27%' } }}
+      >
+        <PersonalChat/>
+      </Drawer> */}
       
     </Container>
   );
 };
 
 export default AllChats;
+

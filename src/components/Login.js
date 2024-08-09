@@ -44,11 +44,6 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (status === 'succeeded' && registrationMessage) {
-  //     navigate('/PasswordAuthenticate');
-  //   }
-  // }, [status, registrationMessage, navigate]);
 
 
   return (
