@@ -47,29 +47,6 @@ export const ReceiveMessages = createAsyncThunk(
   }
 );
 
-// export const ReceiveMessages = createAsyncThunk(
-//   'auth/ReceiveMessages',
-//   async (_, { getState, rejectWithValue }) => {
-//     try {
-    
-//       const conversation_id = localStorage.getItem("conversation_id");
-//       const token = localStorage.getItem("token");
-     
-
-//       const response = await axios.get(`http://localhost:4000/api/messages/${conversation_id}`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`, 
-//         },
-//       });   
-//       return response.data;
-      
-//     } catch (error) {
-//       console.error('Error fetching messages:', error.response ? error.response.data : error.message);
-//       return rejectWithValue(error.response ? error.response.data : 'Error fetching messages');
-//     }
-//   }
-// );
-
 
 
 export const SendMessage = createAsyncThunk(
