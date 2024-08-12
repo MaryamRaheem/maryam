@@ -1,8 +1,8 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Box, Container, Typography, Avatar, TextField, IconButton } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
-import { useDispatch, useSelector,} from 'react-redux';
+import { useDispatch, useSelector, } from 'react-redux';
 import userAvatar from '../assets/Avatar.png';
 import { SendMessage, ReceiveMessages } from '../features/auth/authSlice';
 import io from 'socket.io-client';  // Import Socket.io
@@ -20,58 +20,58 @@ const PersonalChat = () => {
     socketRef.current = io('http://localhost:4000', {
       auth: { token },
     });
-  
+
     return () => {
       socketRef.current.disconnect();
     };
   }, [token]);
-  
+
   useEffect(() => {
     if (conversation_id) {
       socketRef.current.emit('joinRoom', conversation_id);
-  
+
       socketRef.current.on('receiveMessage', (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
-  
+
       return () => {
         socketRef.current.off('receiveMessage');
         socketRef.current.emit('leaveRoom', conversation_id);  // Optional: Leave the room when the conversation_id changes
       };
     }
   }, [conversation_id]);
-  
 
-//   useEffect(() => {
-//     // Initialize Socket.io client
-//     socketRef.current = io('http://localhost:4000', {
-//       auth: {
-//         token,
-//       },
-//     });
 
-  
+  //   useEffect(() => {
+  //     // Initialize Socket.io client
+  //     socketRef.current = io('http://localhost:4000', {
+  //       auth: {
+  //         token,
+  //       },
+  //     });
 
-//     socketRef.current.emit('joinRoom', conversation_id);
-  
-//     // Listen for incoming messages
-//     socketRef.current.on('receiveMessage', (newMessage) => {
-//       setMessages((prevMessages) => [...prevMessages, newMessage]);
-//     });
 
-//     // Cleanup on component unmount
-//   //   return () => {
-//   //     socket.off('receiveMessage');
-//   //     socket.disconnect();
-//   //   };
-//   // }, [conversation_id, token]);
 
-//   return () => {
-//     socketRef.current.off('receiveMessage');
-//     console.log('user connected from frontned');
-//     socketRef.current.disconnect();
-//   };
-// }, [conversation_id, token]);
+  //     socketRef.current.emit('joinRoom', conversation_id);
+
+  //     // Listen for incoming messages
+  //     socketRef.current.on('receiveMessage', (newMessage) => {
+  //       setMessages((prevMessages) => [...prevMessages, newMessage]);
+  //     });
+
+  //     // Cleanup on component unmount
+  //   //   return () => {
+  //   //     socket.off('receiveMessage');
+  //   //     socket.disconnect();
+  //   //   };
+  //   // }, [conversation_id, token]);
+
+  //   return () => {
+  //     socketRef.current.off('receiveMessage');
+  //     console.log('user connected from frontned');
+  //     socketRef.current.disconnect();
+  //   };
+  // }, [conversation_id, token]);
 
 
   useEffect(() => {
@@ -86,12 +86,12 @@ const PersonalChat = () => {
       });
   }, [dispatch]);
 
-  useEffect(()=>{
-if (messages) {
-  console.log("i ama here")
-  console.log(messages);
-}
-  },[messages])
+  useEffect(() => {
+    if (messages) {
+      console.log("i ama here")
+      console.log(messages);
+    }
+  }, [messages])
 
   const handleSendMessage = () => {
     if (message.trim() && conversation_id) {
@@ -100,18 +100,18 @@ if (messages) {
         timestamp: Date.now(),
         sender: user_id,
       };
-  
+
       // setMessages([...messages, newMessage]);
       setMessage('');
-  
+
       // Dispatch the SendMessage thunk
       dispatch(SendMessage({
         conversation_id: conversation_id,
         message: message,
       }));
 
-    dispatch(ReceiveMessages())
-  
+      dispatch(ReceiveMessages())
+
       // Emit the message using the existing Socket.io connection
       // socketRef.current.emit('sendMessage', { conversation_id, content: message });
       socketRef.current.emit('sendMessage', { conversationId: conversation_id, message: message });
@@ -119,8 +119,8 @@ if (messages) {
     }
   };
 
-  
-  
+
+
   return (
     <Container
       disableGutters
@@ -149,11 +149,9 @@ if (messages) {
                 sx={{
                   display: 'flex',
                   marginBottom: 2,
-                  justifyContent: msg.sender === user_id ? 'flex-end' : 'flex-start' // Align message based on sender
+                  justifyContent: msg.sender === user_id ? 'flex-end' : 'flex-start'
                 }}
               >
-                {/* <Typography variant="body1" sx={{ marginRight: 2 }}>{user_id}</Typography> */}
-                {/* <Typography variant="body1" sx={{ marginRight: 2 }}>{msg.sender}</Typography> */}
                 <Typography variant="body1" sx={{ marginRight: 2 }}>{msg.message}</Typography>
                 <Typography variant="body2" color="textSecondary">{new Date(msg.timestamp).toLocaleString()}</Typography>
               </Box>
