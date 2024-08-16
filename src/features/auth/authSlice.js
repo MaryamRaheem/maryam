@@ -24,6 +24,8 @@ const initialState = {
   user_id: null,
   sender_ids: [],
   name: null,
+  isAuthenticated: false,
+  user: null,
 };
 
 export const ReceiveMessages = createAsyncThunk(
@@ -279,20 +281,58 @@ const authSlice = createSlice({
       state.user_id = action.payload;
       // console.log("The participant id is" + state.participantId)
     },
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      // Optionally clear local storage or other state management
+    },
   },
   extraReducers: (builder) => {
     builder
+
+      // .addCase(login.pending, (state) => {
+
+      // })
+      // .addCase(login.fulfilled, (state, action) => {
+      //   state.status = "succeeded";
+      //   state.user = action.payload;
+      // })
+      // .addCase(login.rejected, (state, action) => {
+      //   state.status = "failed";
+      //   state.error = action.error.message;
+      // })
       .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
         state.status = "loading";
       })
       .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload.user; // assuming the response has a user object
+        // Optionally save authentication state or token to localStorage
         state.status = "succeeded";
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = action.payload; // assuming error message is passed here
       })
+      // .addCase(login.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(login.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.isAuthenticated = true;
+      //   state.user = action.payload.user; // assuming the response has a user object
+      //   // Optionally save authentication state or token to localStorage
+      // })
+      // .addCase(login.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload; // assuming error message is passed here
+      // });
       .addCase(register.pending, (state) => {
         state.status = "loading";
       })
