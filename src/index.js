@@ -1,27 +1,55 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
-// import './index.css';
-// import App from './App';
-// import reportWebVitals from './reportWebVitals';
+// // //index.js
+// // import React from "react";
+// // import ReactDOM from "react-dom/client";
+// // import "./index.css";
+// // import App from "./App";
+// // import reportWebVitals from "./reportWebVitals";
 
-// const root = ReactDOM.createRoot(document.getElementById('root'));
+// // const root = ReactDOM.createRoot(document.getElementById("root"));
+// // root.render(
+// //   <React.StrictMode>
+// //     <App />
+// //   </React.StrictMode>
+// // );
+
+// // reportWebVitals();
+
+// import React from "react";
+// import ReactDOM from "react-dom/client";
+// import { Provider } from "react-redux";
+// import { store } from "./app/store";
+// import App from "./App";
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
 // root.render(
-//   <React.StrictMode>
+//   <Provider>
 //     <App />
-//   </React.StrictMode>
+//   </Provider>
 // );
+// // src/index.js
 
-// reportWebVitals();
+// // import React from 'react';
+// // import ReactDOM from 'react-dom';
+// // import { Provider } from 'react-redux';
+// // import store from './features/store';
+// // import App from './App'; // Ensure this import path is correct
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
-import App from './App';
+// // ReactDOM.render(
+// //   <Provider store={store}>
+// //     <App />
+// //   </Provider>,
+// //   document.getElementById('root')
+// // );
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import App from "./App";
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-ReactDOM.render(
+root.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

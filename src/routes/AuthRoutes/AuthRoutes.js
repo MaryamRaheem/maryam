@@ -13,7 +13,7 @@ import ProfileAccount from '../../components/ProfileAccount';
 
 
 const AuthRoutes = () => {
-
+alert("i am here")
     return (
         <>
             <Routes>

@@ -4,6 +4,8 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+// import { register } from '../features/auth/actions';
+// import {setPhoneNumber,setStep} from '../features/auth/reducers'
 import { register, setPhoneNumber, setStep } from '../features/auth/authSlice';
 import background from '../assets/background.jpg';
 import centeredImage from '../assets/image_login.png';

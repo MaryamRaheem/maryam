@@ -6,7 +6,9 @@ import background from '../assets/background.jpg';
 import centeredImage from '../assets/image_login.png'; 
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+
 import { userDetails } from '../features/auth/authSlice'; // Import register
+// import { userDetails } from '../features/auth/actions';
 
 const RoleSelect = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const RoleSelect = () => {
   const first_name = useSelector((state) => state.auth.first_name); // Get firstName from state
   const last_name = useSelector((state) => state.auth.last_name); // Get lastName from state
   const password = useSelector((state) => state.auth.password); // Get password from state
+
 
   const handleContinue = async () => {
     try {
